@@ -1,0 +1,49 @@
+# ─── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# ─── Virtual Environments ────────────────────────────────
+.venv/
+venv/
+env/
+
+# ─── Environment Variables ───────────────────────────────
+.env
+!.env.example
+
+# ─── IDE / Editors ───────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ─── Docker ──────────────────────────────────────────────
+pgdata/
+
+# ─── Node / Frontend ────────────────────────────────────
+node_modules/
+frontend/node_modules/
+frontend/dist/
+*.local
+
+# ─── ML Models (downloaded at runtime) ──────────────────
+*.bin
+*.onnx
+sentence-transformers/
+
+# ─── Logs ────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Alembic ─────────────────────────────────────────────
+# Keep migration files, ignore temp

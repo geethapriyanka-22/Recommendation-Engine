@@ -1,0 +1,138 @@
+/* ═══════════════════════════════════════════════════════════
+   NovaMart — Luxury Design System Tokens
+   Palette: Warm Off-White, Obsidian Black, Terracotta Accent
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ─── Requested Core Luxury Palette ───────────────────── */
+  --bg-primary: #F7F5F2;             /* Warm off-white background */
+  --bg-secondary: #FFFFFF;           /* Surface */
+  --bg-tertiary: #EFECE6;           /* Subtle warm cream tint */
+  --bg-card: #FFFFFF;                /* Surface for cards */
+  --bg-card-hover: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --surface: #FFFFFF;
+  --card-overlay-bg: rgba(255, 255, 255, 0.94);
+
+  --text-primary: #181818;           /* Crisp black luxury typography */
+  --text-secondary: #6B6B6B;         /* Sophisticated neutral gray */
+  --text-muted: #9E9B95;             /* Subtle stone gray */
+  --text-inverse: #FFFFFF;
+
+  --border-subtle: #EFECE6;
+  --border-default: #E7E2DC;         /* Stone / delicate luxury border */
+  --border-hover: #181818;
+
+  /* ─── Accent Colors ────────────────────────────────── */
+  --accent-primary: #C96B4B;         /* Terracotta / warm orange accent */
+  --accent-primary-hover: #B25A3B;
+  --accent-secondary: #8C442B;
+  --accent-gradient: linear-gradient(135deg, #181818 0%, #2E2E2E 100%);
+  --accent-glow: rgba(201, 107, 75, 0.16);
+
+  --success: #3F8F68;                /* Sage green */
+  --success-soft: rgba(63, 143, 104, 0.12);
+  --warning: #D9822B;
+  --warning-soft: rgba(217, 130, 43, 0.12);
+  --danger: #C0392B;
+  --danger-soft: rgba(192, 57, 43, 0.12);
+  --info: #3B6E8C;
+
+  /* ─── Glassmorphism & Elevation ────────────────────── */
+  --glass-bg: rgba(247, 245, 242, 0.92);
+  --glass-bg-strong: rgba(255, 255, 255, 0.96);
+  --glass-border: #E7E2DC;
+  --glass-blur: blur(12px);
+  --glass-shadow: 0 8px 30px rgba(24, 24, 24, 0.04);
+
+  /* ─── Typography ───────────────────────────────────── */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* ─── Spacing Scale ────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* ─── Border Radius (Refined, not excessively rounded) ── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  /* ─── Transitions ──────────────────────────────────── */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 350ms;
+
+  /* ─── Shadows ──────────────────────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(24, 24, 24, 0.03);
+  --shadow-md: 0 4px 16px rgba(24, 24, 24, 0.05);
+  --shadow-lg: 0 12px 32px rgba(24, 24, 24, 0.07);
+  --shadow-xl: 0 24px 48px rgba(24, 24, 24, 0.09);
+  --shadow-glow: 0 0 20px rgba(201, 107, 75, 0.18);
+
+  /* ─── Layout ───────────────────────────────────────── */
+  --max-width: 1320px;
+  --navbar-height: 74px;
+  --sidebar-width: 280px;
+}
+
+/* ─── Nocturnal Luxury Mode (Optional Toggle) ───────── */
+[data-theme="dark"] {
+  --bg-primary: #121212;
+  --bg-secondary: #1A1A1A;
+  --bg-tertiary: #222222;
+  --bg-card: #1A1A1A;
+  --bg-card-hover: #242424;
+  --bg-elevated: #262626;
+  --surface: #1A1A1A;
+  --card-overlay-bg: rgba(26, 26, 26, 0.94);
+
+  --text-primary: #F7F5F2;
+  --text-secondary: #C5C1B8;
+  --text-muted: #9E9A92;
+  --text-inverse: #181818;
+
+  --border-subtle: #2A2A2A;
+  --border-default: #333333;
+  --border-hover: #F7F5F2;
+
+  --accent-primary: #D47B5D;
+  --accent-primary-hover: #E28D70;
+  --accent-glow: rgba(212, 123, 93, 0.2);
+
+  --glass-bg: rgba(18, 18, 18, 0.92);
+  --glass-bg-strong: rgba(26, 26, 26, 0.96);
+  --glass-border: #333333;
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.6);
+}

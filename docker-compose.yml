@@ -1,0 +1,61 @@
+services:
+  # ─── PostgreSQL 16 + pgvector ───────────────────────────
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: novamart-db
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-novamart_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-novamart_pass_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-novamart_db}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-novamart_user} -d ${POSTGRES_DB:-novamart_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ─── FastAPI Backend ────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: novamart-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-novamart_user}:${POSTGRES_PASSWORD:-novamart_pass_2026}@db:5432/${POSTGRES_DB:-novamart_db}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # ─── React Frontend (Vite) ─────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: novamart-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_TARGET=http://backend:8000
+    depends_on:
+      - backend
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  pgdata:
+    driver: local
