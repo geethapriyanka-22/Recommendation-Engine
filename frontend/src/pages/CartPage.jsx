@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import { formatPrice } from '../utils/currency';
 
 export default function CartPage() {
   const { cart, updateItem, removeItem, clearCart, loading } = useCart();
@@ -55,7 +56,7 @@ export default function CartPage() {
                     {item.product_title}
                   </h3>
                   <span style={{ fontSize: 'var(--text-sm)', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
-                    ${item.product_price?.toFixed(2)} each
+                    {formatPrice(item.product_price)} each
                   </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)' }}>
@@ -64,7 +65,7 @@ export default function CartPage() {
                   <button onClick={() => updateItem(item.id, item.quantity + 1)} className="btn btn-ghost" style={{ padding: 'var(--space-1) var(--space-2)' }}>+</button>
                 </div>
                 <span style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', minWidth: '80px', textAlign: 'right' }}>
-                  ${item.line_total?.toFixed(2)}
+                  {formatPrice(item.line_total)}
                 </span>
                 <button onClick={() => removeItem(item.id)} className="btn btn-ghost" style={{ color: 'var(--danger)', fontSize: 'var(--text-lg)' }}>×</button>
               </div>
@@ -80,11 +81,11 @@ export default function CartPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginBottom: 'var(--space-6)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: 'var(--text-sm)' }}>
                 <span>Subtotal ({cart.item_count} items)</span>
-                <span>${cart.total.toFixed(2)}</span>
+                <span>{formatPrice(cart.total)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: 'var(--text-sm)' }}>
                 <span>Tax (8%)</span>
-                <span>${(cart.total * 0.08).toFixed(2)}</span>
+                <span>{formatPrice(cart.total * 0.08)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: 'var(--text-sm)' }}>
                 <span>Shipping</span>
@@ -92,7 +93,7 @@ export default function CartPage() {
               </div>
               <div style={{ borderTop: '1px solid var(--border-default)', paddingTop: 'var(--space-3)', display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: 'var(--text-lg)' }}>
                 <span>Total</span>
-                <span style={{ fontFamily: 'var(--font-mono)' }}>${(cart.total * 1.08).toFixed(2)}</span>
+                <span style={{ fontFamily: 'var(--font-mono)' }}>{formatPrice(cart.total * 1.08)}</span>
               </div>
             </div>
             <button onClick={handleCheckout} className="btn btn-primary btn-lg" style={{ width: '100%' }}>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { formatPrice } from '../utils/currency';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -119,7 +120,7 @@ export default function OrdersPage() {
                     Total Amount
                   </div>
                   <div style={{ fontWeight: 800, fontSize: 'var(--text-base)' }}>
-                    ${order.total?.toFixed(2)}
+                    {formatPrice(order.total)}
                   </div>
                 </div>
 
@@ -163,7 +164,7 @@ export default function OrdersPage() {
                       </div>
                     </div>
                     <div style={{ fontWeight: 600 }}>
-                      ${item.total_price?.toFixed(2)}
+                      {formatPrice(item.total_price)}
                     </div>
                   </div>
                 ))}

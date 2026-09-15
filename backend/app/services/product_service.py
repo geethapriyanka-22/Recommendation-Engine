@@ -64,6 +64,23 @@ SYNONYMS: dict[str, list[str]] = {
 }
 
 
+STOP_WORDS = {
+    "a", "about", "above", "after", "again", "against", "all", "am", "an", "and",
+    "any", "are", "as", "at", "be", "because", "been", "before", "being", "below",
+    "between", "both", "but", "by", "can", "could", "did", "do", "does", "doing",
+    "down", "during", "each", "few", "for", "from", "further", "had", "has", "have",
+    "having", "he", "her", "here", "hers", "herself", "him", "himself", "his", "how",
+    "i", "if", "in", "into", "is", "it", "its", "itself", "just", "me", "more", "most",
+    "my", "myself", "no", "nor", "not", "of", "off", "on", "once", "only", "or",
+    "other", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "should",
+    "so", "some", "such", "than", "that", "the", "their", "theirs", "them", "themselves",
+    "then", "there", "these", "they", "this", "those", "through", "to", "too", "under",
+    "until", "up", "very", "was", "we", "were", "what", "when", "where", "which",
+    "while", "who", "whom", "why", "with", "would", "you", "your", "yours",
+    "want", "need", "show", "find", "looking", "give", "best", "good"
+}
+
+
 class ProductService:
     def __init__(self, db: AsyncSession):
         self.db = db
@@ -159,7 +176,10 @@ class ProductService:
             query = query.outerjoin(Category, Product.category_id == Category.id)
             count_query = count_query.outerjoin(Category, Product.category_id == Category.id)
 
-            words = q.strip().split()
+            raw_words = q.strip().split()
+            meaningful_words = [w for w in raw_words if w.lower() not in STOP_WORDS and len(w) > 1]
+            words = meaningful_words if meaningful_words else raw_words
+
             word_filters = []
             for word in words:
                 w_lower = word.lower()
@@ -177,7 +197,8 @@ class ProductService:
                         func.array_to_string(Product.tags, ' ').ilike(pat),
                     ])
                 word_filters.append(or_(*term_conditions))
-            filters.append(and_(*word_filters))
+            if word_filters:
+                filters.append(and_(*word_filters))
 
         if filters:
             query = query.where(and_(*filters))

@@ -649,7 +649,8 @@ AUTHENTIC_PRODUCTS = [
             "molding": "Durable molding around metal plates for smooth lift-off and quieter workouts"
         },
         "images": [
-            "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1586401100295-7a8096fd231a?w=800&auto=format&fit=crop"
         ],
         "tags": ["bowflex", "dumbbells", "fitness", "weights", "homegym", "strength", "bestseller"]
     },
@@ -670,6 +671,7 @@ AUTHENTIC_PRODUCTS = [
             "screen": "Full-color LCD with guided visual routines and biometric heart rate display"
         },
         "images": [
+            "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&auto=format&fit=crop",
             "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&auto=format&fit=crop"
         ],
         "tags": ["theragun", "therabody", "massage", "recovery", "fitness", "therapy", "pro"]
@@ -738,8 +740,8 @@ AUTHENTIC_PRODUCTS = [
             "origin": "Made in England"
         },
         "images": [
-            "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop"
         ],
         "tags": ["burberry", "coat", "trench", "heritage", "luxury", "outerwear", "bestseller"]
     },
@@ -783,8 +785,8 @@ AUTHENTIC_PRODUCTS = [
             "origin": "Made in Italy"
         },
         "images": [
-            "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&auto=format&fit=crop"
         ],
         "tags": ["burberry", "sneakers", "footwear", "luxury", "minimalist", "white"]
     },
@@ -868,6 +870,7 @@ AUTHENTIC_PRODUCTS = [
             "case": "Includes magnetic Saint Laurent leather case and cloth"
         },
         "images": [
+            "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=800&auto=format&fit=crop",
             "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&auto=format&fit=crop"
         ],
         "tags": ["saintlaurent", "sunglasses", "eyewear", "acetate", "luxury", "black"]
@@ -914,7 +917,8 @@ AUTHENTIC_PRODUCTS = [
             "display": "High-contrast discreet LCD showing target and live temperatures"
         },
         "images": [
-            "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=800&auto=format&fit=crop"
         ],
         "tags": ["fellow", "kettle", "pourover", "coffee", "design", "kitchen", "bestseller"]
     },
@@ -935,6 +939,7 @@ AUTHENTIC_PRODUCTS = [
             "milk_system": "Auto MilQ temperature and texture control (Hands-free)"
         },
         "images": [
+            "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=800&auto=format&fit=crop",
             "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop"
         ],
         "tags": ["breville", "espresso", "coffee", "barista", "kitchen", "premium", "bestseller"]
@@ -978,6 +983,7 @@ AUTHENTIC_PRODUCTS = [
             "bin_capacity": "0.76 Liters with hygienic point-and-shoot emptying"
         },
         "images": [
+            "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=800&auto=format&fit=crop",
             "https://images.unsplash.com/photo-1558317374-067fb5f30001?w=800&auto=format&fit=crop"
         ],
         "tags": ["dyson", "vacuum", "cleaning", "home", "smart", "laser", "bestseller"]
@@ -1111,7 +1117,8 @@ AUTHENTIC_PRODUCTS = [
             "sustainability": "100% recycled polyester engineered mesh upper"
         },
         "images": [
-            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&auto=format&fit=crop"
         ],
         "tags": ["onrunning", "cloudmonster", "runningshoes", "sneakers", "marathon", "fitness", "bestseller"]
     },
@@ -1177,6 +1184,7 @@ AUTHENTIC_PRODUCTS = [
             "film_simulations": "20 modes including REALA ACE, Classic Chrome, and Nostalgic Neg"
         },
         "images": [
+            "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&auto=format&fit=crop",
             "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop"
         ],
         "tags": ["fujifilm", "x100vi", "camera", "photography", "classic", "vintage", "bestseller"]
@@ -1199,9 +1207,348 @@ AUTHENTIC_PRODUCTS = [
             "water_resistance": "100m water resistant, depth gauge with water temperature sensor"
         },
         "images": [
-            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop"
+            "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=800&auto=format&fit=crop"
         ],
         "tags": ["apple", "applewatch", "ultra2", "smartwatch", "fitness", "titanium", "bestseller"]
-    }
-]
+    },
 
+    # ─── EXPANDED ICONIC CATALOG ADDITIONS ────────────────
+    {
+        "category": "electronics",
+        "subcategory": "Laptops & Computers",
+        "title": "Sony PlayStation 5 Slim Console (1TB SSD, DualSense Wireless Controller)",
+        "brand": "Sony",
+        "price": 499.99,
+        "compare_at_price": 549.99,
+        "stock": 40,
+        "short_description": "Slim design with 1TB SSD storage, 4K-TV gaming, Ray Tracing, and Tempest 3D AudioTech.",
+        "description": "Experience lightning-fast loading with an ultra-high-speed SSD, deeper immersion with haptic feedback, adaptive triggers, and 3D Audio, plus an all-new generation of incredible PlayStation games. Packed into a sleek, compact slim chassis with 1TB internal high-speed storage.",
+        "attributes": {
+            "storage": "1TB Custom High-Speed NVMe SSD",
+            "resolution": "Up to 4K 120Hz, 8K output support",
+            "audio": "Tempest 3D AudioTech engine",
+            "controller": "DualSense Wireless Controller with Haptic Feedback",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["sony", "playstation", "ps5", "gaming", "console", "bestseller"]
+    },
+    {
+        "category": "electronics",
+        "subcategory": "Smartphones & Tablets",
+        "title": "Amazon Kindle Paperwhite (16GB, 6.8\" Glare-Free Display, Warm Light)",
+        "brand": "Amazon",
+        "price": 149.99,
+        "compare_at_price": 169.99,
+        "stock": 65,
+        "short_description": "6.8\" 300 ppi display, adjustable warm light, up to 10 weeks battery life, waterproof IPX8.",
+        "description": "Now with a 6.8\" display and thinner borders, adjustable warm light, up to 10 weeks of battery life, and 20% faster page turns. Purpose-built for reading with a flush-front design and 300 ppi glare-free display that reads like real paper even in bright sunlight.",
+        "attributes": {
+            "display": "6.8\" Paperwhite display with built-in light, 300 ppi",
+            "storage": "16GB (Holds thousands of books)",
+            "battery_life": "Up to 10 weeks on a single charge",
+            "waterproofing": "IPX8 (Submersion in 2 meters fresh water for 60 min)",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["amazon", "kindle", "ereader", "books", "reading", "paperwhite", "bestseller"]
+    },
+    {
+        "category": "electronics",
+        "subcategory": "Laptops & Computers",
+        "title": "Logitech MX Master 3S Wireless Performance Mouse - Graphite",
+        "brand": "Logitech",
+        "price": 99.99,
+        "compare_at_price": 119.99,
+        "stock": 70,
+        "short_description": "Quiet Clicks, 8K DPI any-surface tracking, MagSpeed electromagnetic scrolling wheel.",
+        "description": "An icon remastered. Feel every single moment of your workflow with even more precision, tactility, and performance, thanks to Quiet Clicks and an 8,000 DPI track-on-glass sensor. The MagSpeed electromagnetic scroll wheel provides unmatched speed and silence.",
+        "attributes": {
+            "sensor": "Darkfield high precision, 200 to 8000 DPI (set in increments of 50 DPI)",
+            "buttons": "7 buttons (Left/Right-click, Back/Forward, App-Switch, Wheel mode-shift, Middle click)",
+            "scroll": "MagSpeed SmartShift electromagnetic scrolling wheel",
+            "battery": "Rechargeable Li-Po (500 mAh) battery, up to 70 days on a full charge",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["logitech", "mouse", "mxmaster", "ergonomic", "productivity", "bestseller"]
+    },
+    {
+        "category": "electronics",
+        "subcategory": "Audio & Headphones",
+        "title": "Marshall Stanmore III Bluetooth Home Speaker - Black",
+        "brand": "Marshall",
+        "price": 379.99,
+        "compare_at_price": 419.99,
+        "stock": 35,
+        "short_description": "Room-filling Marshall signature sound, re-engineered wider stereo soundstage, Bluetooth 5.2.",
+        "description": "As the middleweight speaker of the home line-up, Stanmore III brings expansive Marshall sound to any room. It has outward-angled tweeters and updated waveguides to deliver a consistently solid sound that is so wide it chases you around the room.",
+        "attributes": {
+            "power_amps": "One 50 Watt Class D amp for woofer, Two 15 Watt Class D amps for tweeters",
+            "frequency_range": "45\u201320,000 Hz",
+            "controls": "Bass and treble analogue control knobs, brass volume knob",
+            "connectivity": "Bluetooth 5.2, 3.5 mm input, RCA input",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["marshall", "speaker", "audio", "bluetooth", "vintage", "rock", "bestseller"]
+    },
+    {
+        "category": "electronics",
+        "subcategory": "Audio & Headphones",
+        "title": "Bose SoundLink Revolve+ II Portable Bluetooth Speaker - Triple Black",
+        "brand": "Bose",
+        "price": 329.0,
+        "compare_at_price": 359.0,
+        "stock": 45,
+        "short_description": "True 360-degree sound, durable water and dust resistant (IP55), up to 17 hours battery.",
+        "description": "Deep. Loud. And immersive, too. This true 360\u00b0 speaker was engineered to spread deep, jaw-dropping sound in every direction. That means, when everyone stands around it, everyone gets the same experience with flexible fabric handle for effortless portability.",
+        "attributes": {
+            "sound": "True 360-degree sound coverage with dual-passive radiators",
+            "battery_life": "Up to 17 hours rechargeable lithium-ion battery",
+            "durability": "IP55 water- and dust-resistant seamless aluminum body",
+            "voice_assistant": "Built-in microphone for speakerphone and Siri / Google Assistant",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["bose", "speaker", "soundlink", "bluetooth", "portable", "360sound", "bestseller"]
+    },
+    {
+        "category": "electronics",
+        "subcategory": "Smart Home & Wearables",
+        "title": "Belkin BoostCharge Pro 3-in-1 Wireless Charging Stand with MagSafe 15W",
+        "brand": "Belkin",
+        "price": 149.95,
+        "compare_at_price": 169.95,
+        "stock": 50,
+        "short_description": "Official 15W MagSafe fast charging for iPhone, Apple Watch fast charger, and AirPods tray.",
+        "description": "Charge your Apple devices faster with this beautifully designed charging stand. Delivering up to 15W of wireless charging to your iPhone 12 or newer, fast charging for Apple Watch Series 7 and later, and a dedicated Qi pad for your AirPods.",
+        "attributes": {
+            "compatibility": "Made for MagSafe official 15W certification",
+            "watch_charging": "Apple Watch Fast Charging support",
+            "orientation": "Charge in portrait or landscape for StandBy mode",
+            "materials": "Architectural stainless steel arm with soft-touch silicone base",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["belkin", "magsafe", "charger", "apple", "wireless", "iphone", "stand"]
+    },
+    {
+        "category": "home_kitchen",
+        "subcategory": "Cookware & Dining",
+        "title": "Stanley Quencher H2.0 FlowState Stainless Steel Tumbler 40 oz - Rose Quartz",
+        "brand": "Stanley",
+        "price": 45.0,
+        "compare_at_price": 55.0,
+        "stock": 90,
+        "short_description": "Recycled stainless steel, double-wall vacuum insulation, FlowState 3-position rotating lid.",
+        "description": "Constructed of 90% recycled stainless steel for sustainable sipping, the 40 oz Quencher H2.0 helps you reach your hydration goals with fewer refills. Commuting, studio workouts, day trips or your front porch\u2014you'll want this tumbler by your side.",
+        "attributes": {
+            "capacity": "40 oz / 1.18 Liters",
+            "insulation": "Keeps drinks cold for 11 hours, iced for 2 days",
+            "lid": "FlowState\u2122 3-position lid (straw opening, drink opening, full cover)",
+            "cup_holder": "Car cup holder compatible base",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["stanley", "quencher", "tumbler", "waterbottle", "hydration", "bestseller"]
+    },
+    {
+        "category": "home_kitchen",
+        "subcategory": "Kitchen Appliances",
+        "title": "Chemex Classic Eight-Cup Pour-Over Glass Coffeemaker with Wood Collar",
+        "brand": "Chemex",
+        "price": 49.5,
+        "compare_at_price": 58.0,
+        "stock": 60,
+        "short_description": "Iconic non-porous borosilicate glass carafe with polished wood collar and leather tie.",
+        "description": "Selected by the Illinois Institute of Technology as one of the 100 best designed products of modern times. The Chemex delivers the purest flavor experience without any chemical residue, producing clean, aromatic pour-over coffee free of sediment and bitterness.",
+        "attributes": {
+            "capacity": "40 oz (8 cups of brewed coffee)",
+            "material": "Heat-resistant non-porous Borosilicate Glass",
+            "handle": "Polished wood collar with genuine leather tie",
+            "design": "Permanent exhibition piece at the Museum of Modern Art (MoMA)",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["chemex", "coffee", "pourover", "coffeemaker", "glassware", "design", "bestseller"]
+    },
+    {
+        "category": "fashion",
+        "subcategory": "Sneakers & Footwear",
+        "title": "Birkenstock Boston Oiled Leather Clogs - Habana Brown",
+        "brand": "Birkenstock",
+        "price": 160.0,
+        "compare_at_price": 175.0,
+        "stock": 50,
+        "short_description": "Anatomically shaped cork-latex footbed with oiled nubuck leather upper and adjustable strap.",
+        "description": "The BIRKENSTOCK Boston is a veritable classic that can easily be worn all year round. With its sophisticated, individually adjustable design and iconic natural cork footbed that molds to the unique contours of your foot over time.",
+        "attributes": {
+            "upper": "Oiled nubuck leather with natural patina",
+            "footbed": "Anatomically shaped cork-latex footbed with suede lining",
+            "sole": "Lightweight shock-absorbing EVA",
+            "origin": "Made in Germany",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["birkenstock", "boston", "clogs", "footwear", "leather", "casual", "bestseller"]
+    },
+    {
+        "category": "fashion",
+        "subcategory": "Eyewear & Accessories",
+        "title": "Ray-Ban Clubmaster Classic Polarized Sunglasses - Mock Tortoise / Gold",
+        "brand": "Ray-Ban",
+        "price": 215.0,
+        "compare_at_price": 240.0,
+        "stock": 45,
+        "short_description": "Retro browline acetate frame with polished gold metal rims and G-15 green polarized mineral glass.",
+        "description": "Ray-Ban Clubmaster Classic sunglasses are retro and timeless. Inspired by the 50's, the unmistakable design of the Clubmaster Classic is worn by cultural intellectuals, those who lead the changed tomorrow.",
+        "attributes": {
+            "frame": "Mock Tortoise acetate browline with polished gold metal lower rim",
+            "lenses": "Crystal Green G-15 Polarized mineral lenses (100% UV protection)",
+            "dimensions": "Lens 51mm, Bridge 21mm, Temple 145mm",
+            "origin": "Handcrafted in Italy",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["rayban", "clubmaster", "sunglasses", "eyewear", "polarized", "classic", "bestseller"]
+    },
+    {
+        "category": "sports_outdoors",
+        "subcategory": "Outdoor & Camping",
+        "title": "Yeti Rambler 20 oz Travel Mug with Stronghold Lid - Navy",
+        "brand": "Yeti",
+        "price": 38.0,
+        "compare_at_price": 45.0,
+        "stock": 75,
+        "short_description": "18/8 kitchen-grade stainless steel, double-wall vacuum insulation, leak-resistant twist Stronghold lid.",
+        "description": "This double-duty, on-the-go drinkware is topped with the Rambler\u00ae Stronghold\u2122 Lid\u2014a leak-resistant, twist-on upgrade that's backed with dual-slider magnet technology. This lid easily rotates to fasten for both right- and left-handed users.",
+        "attributes": {
+            "capacity": "20 fl. oz. / 591 ml",
+            "material": "18/8 Kitchen-grade stainless steel, puncture- and rust-resistant",
+            "lid": "Stronghold\u2122 360-degree twist-on leak-resistant lid",
+            "cupholder": "Elevated handle fits standard car cup holders",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["yeti", "rambler", "travelmug", "coffee", "insulated", "outdoors", "bestseller"]
+    },
+    {
+        "category": "sports_outdoors",
+        "subcategory": "Yoga & Recovery",
+        "title": "Manduka PRO Yoga Mat (6mm High Density Cushion) - Black Sage",
+        "brand": "Manduka",
+        "price": 138.0,
+        "compare_at_price": 150.0,
+        "stock": 40,
+        "short_description": "Ultra-dense 6mm cushion for joint protection, closed-cell surface prevents sweat absorption.",
+        "description": "The #1 recommended mat by yoga teachers worldwide. The Manduka PRO provides unmatched density and joint cushioning on hard floors, proprietary dot-pattern traction, and a lifetime guarantee.",
+        "attributes": {
+            "thickness": "6 mm ultra-dense cushioning",
+            "dimensions": "71\" L x 26\" W (180cm x 66cm), Weight: 7.5 lbs",
+            "surface": "Closed-cell PVC prevents moisture, sweat, and bacteria from entering",
+            "certification": "STANDARD 100 by OEKO-TEX\u00ae non-toxic emissions manufacturing",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["manduka", "yogamat", "yoga", "fitness", "pro", "recovery", "bestseller"]
+    },
+    {
+        "category": "sports_outdoors",
+        "subcategory": "Fitness Equipment",
+        "title": "Spalding NBA Official Game Ball Basketball (Full Grain Leather, Size 7)",
+        "brand": "Spalding",
+        "price": 129.99,
+        "compare_at_price": 149.99,
+        "stock": 40,
+        "short_description": "Exclusive Horween full grain leather cover, official NBA 29.5\" size, superior bounce and grip.",
+        "description": "Crafted from exclusive Horween full-grain leather that breaks in over time to offer a soft touch and unmatched grip. Meets all stringent professional standards for true bounce and flight consistency.",
+        "attributes": {
+            "size": "Official NBA Size 7 (29.5\" circumference)",
+            "cover": "Premium Horween full-grain leather cover",
+            "use": "Designed strictly for indoor hardwood play",
+            "inflation": "Retains air pressure with butyl bladder and nylon winding",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["spalding", "basketball", "nba", "sports", "leather", "athletics", "bestseller"]
+    },
+    {
+        "category": "beauty",
+        "subcategory": "Hair Styling & Care",
+        "title": "Olaplex No. 3 Hair Perfector Repairing Treatment (3.3 fl oz / 100ml)",
+        "brand": "Olaplex",
+        "price": 30.0,
+        "compare_at_price": 36.0,
+        "stock": 85,
+        "short_description": "Global bestseller bond-builder reduces breakage and visibly strengthens all hair types.",
+        "description": "An at-home bond-building treatment that reduces breakage and visibly strengthens hair, improving its look and feel. Powered by patented OLAPLEX Bond Building Technology\u2122 that repairs broken disulfide bonds caused by heat, chemical processing, and styling.",
+        "attributes": {
+            "volume": "100 ml / 3.3 fl. oz.",
+            "technology": "Bis-Aminopropyl Diglycol Dimaleate patented bond builder",
+            "hair_type": "Straight, Wavy, Curly, and Coily (Color-safe)",
+            "safety": "Paraben-free, phthalate-free, sulfate-free, vegan",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["olaplex", "haircare", "treatment", "repair", "beauty", "bestseller"]
+    },
+    {
+        "category": "beauty",
+        "subcategory": "Skincare Treatments",
+        "title": "Dior Addict Lip Glow Color Reviver Balm - 001 Pink",
+        "brand": "Dior",
+        "price": 40.0,
+        "compare_at_price": 45.0,
+        "stock": 70,
+        "short_description": "Color-awakening hydrating lip balm formulated with 97% natural-origin ingredients and cherry oil.",
+        "description": "The 1st Dior lip balm formulated with 97% natural-origin ingredients that subtly revives the natural color of lips with a custom glow for 6h and hydrates lips for 24h. Infused with cherry oil, sunflower wax, and shea butter.",
+        "attributes": {
+            "shade": "001 Pink (Universal subtle natural flush)",
+            "ingredients": "97% Natural-origin with nourishing French cherry oil",
+            "finish": "Dewy subtle sheen with custom pH color adaptation",
+            "wear": "24h continuous hydration and 6h custom color glow",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["dior", "lipglow", "lipbalm", "beauty", "makeup", "luxury", "bestseller"]
+    },
+    {
+        "category": "fashion",
+        "subcategory": "Bags & Luggage",
+        "title": "Bellroy Transit Backpack 28L - Black",
+        "brand": "Bellroy",
+        "price": 259.0,
+        "compare_at_price": 289.0,
+        "stock": 35,
+        "short_description": "Travel carry-on compliant backpack with separate 16\" laptop access and hidden passport pocket.",
+        "description": "Clever organization meets sleek minimalist travel. The Transit Backpack features quick-access external pockets for phone, passport, and water bottles, a dedicated lay-flat laptop sleeve, and a spacious main compartment with internal compression straps.",
+        "attributes": {
+            "capacity": "28 Liters (Airline carry-on approved)",
+            "laptop_fit": "Fits up to 16\" laptops in padded separate rear compartment",
+            "materials": "Durable, water-resistant recycled Baida Nylon fabric with premium leather accents",
+            "comfort": "Contoured padded breathable mesh back panel with sternum strap",
+        },
+        "images": [
+            "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop",
+        ],
+        "tags": ["bellroy", "backpack", "travel", "carryon", "minimalist", "laptopbag", "bestseller"]
+    },
+]

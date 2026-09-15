@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { useTheme } from '../../context/ThemeContext';
+import { trackSearch, getWishlistIds } from '../../services/activityTracker';
 
 const NAV_CATEGORIES = [
   { name: 'All Departments', path: '/products' },
@@ -24,7 +25,17 @@ export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const [showCatMenu, setShowCatMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [wishlistCount, setWishlistCount] = useState(() => getWishlistIds().length);
   const searchInputRef = useRef(null);
+
+  // Keep wishlist count synced across windows & components
+  useEffect(() => {
+    const handleActivityChange = () => {
+      setWishlistCount(getWishlistIds().length);
+    };
+    window.addEventListener('novamart_activity_updated', handleActivityChange);
+    return () => window.removeEventListener('novamart_activity_updated', handleActivityChange);
+  }, []);
 
   // Sync search input with URL
   useEffect(() => {
@@ -44,6 +55,7 @@ export default function Navbar() {
     e.preventDefault();
     const query = searchQuery.trim();
     if (query) {
+      trackSearch(query);
       navigate(`/products?q=${encodeURIComponent(query)}`);
     } else {
       navigate('/products');
@@ -213,6 +225,19 @@ export default function Navbar() {
             style={{ fontSize: '1.05rem' }}
           >
             {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+
+          {/* Wishlist Icon */}
+          <button
+            className="nav-btn"
+            onClick={() => navigate('/products')}
+            title={`Wishlist (${wishlistCount})`}
+            style={{ fontSize: '1.2rem', position: 'relative' }}
+          >
+            ♡
+            {wishlistCount > 0 && (
+              <span className="cart-badge" style={{ background: '#ef4444' }}>{wishlistCount}</span>
+            )}
           </button>
 
           {/* Cart Icon */}

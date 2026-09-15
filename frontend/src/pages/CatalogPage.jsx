@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import api from '../services/api';
 import ProductCard from '../components/products/ProductCard';
+import { trackSearch } from '../services/activityTracker';
 
 export default function CatalogPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,6 +43,9 @@ export default function CatalogPage() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
+      if (q && q.trim()) {
+        trackSearch(q.trim());
+      }
       if (aiMode && q) {
         const { data } = await api.get('/ai/semantic-search', {
           params: {
@@ -253,7 +257,7 @@ export default function CatalogPage() {
           )}
           {(minPrice || maxPrice) && (
             <span className="badge badge-accent" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 10px' }}>
-              💲 ${minPrice || '0'} - ${maxPrice || '∞'}
+              ₹ {minPrice || '0'} - {maxPrice || '∞'}
               <button
                 onClick={() => { updateParam('min_price', ''); updateParam('max_price', ''); }}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}
@@ -396,7 +400,7 @@ export default function CatalogPage() {
           {/* Price Filter */}
           <div className="glass-card" style={{ padding: 'var(--space-5)' }}>
             <h3 style={{ fontSize: 'var(--text-sm)', fontWeight: 600, marginBottom: 'var(--space-4)', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)' }}>
-              Price Range ($)
+              Price Range (₹)
             </h3>
             <div style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
               <input
@@ -557,9 +561,13 @@ export default function CatalogPage() {
           ) : (
             <div className="glass-card" style={{ textAlign: 'center', padding: 'var(--space-16) var(--space-6)', color: 'var(--text-muted)' }}>
               <div style={{ fontSize: '3rem', marginBottom: 'var(--space-4)' }}>🔍</div>
-              <h3 style={{ color: 'var(--text-primary)', marginBottom: 'var(--space-2)' }}>No matching products found</h3>
-              <p style={{ maxWidth: '420px', margin: '0 auto var(--space-6)', fontSize: 'var(--text-sm)' }}>
-                We couldn't find any products matching your criteria. Try clearing some filters or searching for general keywords like "Sony", "Apple", "Shoes", or "MacBook".
+              <h3 style={{ color: 'var(--text-primary)', marginBottom: 'var(--space-2)' }}>
+                {aiMode ? 'No AI semantic matches found' : 'No matching products found'}
+              </h3>
+              <p style={{ maxWidth: '460px', margin: '0 auto var(--space-6)', fontSize: 'var(--text-sm)', lineHeight: 1.6 }}>
+                {aiMode
+                  ? "Our AI semantic search couldn't find sufficiently relevant products for this query in our curated collection. Try natural phrases like 'running shoes', 'laptop for work', 'warm winter jacket', or 'espresso maker'."
+                  : 'We couldn\'t find any products matching your criteria. Try clearing some filters or searching for general keywords like "Sony", "Apple", "Shoes", or "MacBook".'}
               </p>
               <button onClick={clearAllFilters} className="btn btn-primary">
                 Clear All Filters

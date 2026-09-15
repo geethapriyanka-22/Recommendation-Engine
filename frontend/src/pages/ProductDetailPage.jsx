@@ -5,7 +5,8 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import ProductCard from '../components/products/ProductCard';
 
-import { trackProductInteraction } from '../services/activityTracker';
+import { trackProductInteraction, toggleWishlist, isWishlisted } from '../services/activityTracker';
+import { formatPrice } from '../utils/currency';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -18,6 +19,9 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  const [wishlisted, setWishlisted] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -28,6 +32,7 @@ export default function ProductDetailPage() {
         const endpoint = isUUID ? `/products/${idOrSlug}` : `/products/slug/${idOrSlug}`;
         const { data } = await api.get(endpoint);
         setProduct(data);
+        setWishlisted(isWishlisted(data.id));
         // Track product view for personalized home recommendations
         trackProductInteraction('view', data.id);
         // Fetch reviews
@@ -44,14 +49,25 @@ export default function ProductDetailPage() {
     fetchProduct();
   }, [idOrSlug]);
 
+  const handleToggleWishlist = () => {
+    if (!product) return;
+    const nowWishlisted = toggleWishlist(product.id);
+    setWishlisted(nowWishlisted);
+  };
+
   const handleAddToCart = async () => {
     if (!user) { window.location.href = '/login'; return; }
+    if (isAdding) return;
+    setIsAdding(true);
     try {
       await addToCart(product.id, quantity);
       trackProductInteraction('cart', product.id);
-      alert('Added to cart!');
+      setJustAdded(true);
+      setTimeout(() => setJustAdded(false), 2200);
     } catch (err) {
       alert(err.response?.data?.detail || 'Failed to add to cart');
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -132,12 +148,12 @@ export default function ProductDetailPage() {
 
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-3)', marginBottom: 'var(--space-6)' }}>
             <span style={{ fontSize: 'var(--text-4xl)', fontWeight: 800, fontFamily: 'var(--font-mono)' }}>
-              ${product.price.toFixed(2)}
+              {formatPrice(product.price)}
             </span>
             {product.compare_at_price && (
               <>
                 <span style={{ fontSize: 'var(--text-xl)', color: 'var(--text-muted)', textDecoration: 'line-through' }}>
-                  ${product.compare_at_price.toFixed(2)}
+                  {formatPrice(product.compare_at_price)}
                 </span>
                 <span className="badge badge-danger">-{discount}%</span>
               </>
@@ -182,8 +198,37 @@ export default function ProductDetailPage() {
                 <span style={{ padding: 'var(--space-2) var(--space-4)', fontWeight: 600, minWidth: '3rem', textAlign: 'center' }}>{quantity}</span>
                 <button onClick={() => setQuantity(Math.min(product.stock_quantity, quantity + 1))} className="btn btn-ghost" style={{ padding: 'var(--space-2) var(--space-3)' }}>+</button>
               </div>
-              <button onClick={handleAddToCart} className="btn btn-primary btn-lg" style={{ flex: 1 }}>
-                🛒 Add to Cart — ${(product.price * quantity).toFixed(2)}
+              <button
+                onClick={handleAddToCart}
+                disabled={isAdding}
+                className="btn btn-primary btn-lg"
+                style={{
+                  flex: 1,
+                  background: justAdded ? '#10b981' : undefined,
+                  borderColor: justAdded ? '#10b981' : undefined,
+                  transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+              >
+                {justAdded ? '✓ Added to Bag!' : isAdding ? 'Adding...' : `🛒 Add to Cart — ${formatPrice(product.price * quantity)}`}
+              </button>
+              <button
+                type="button"
+                onClick={handleToggleWishlist}
+                title={wishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                className="btn btn-ghost"
+                style={{
+                  padding: 'var(--space-3)',
+                  border: '1px solid var(--border-default)',
+                  borderRadius: 'var(--radius-md)',
+                  color: wishlisted ? '#ef4444' : 'var(--text-muted)',
+                  fontSize: '1.3rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                }}
+              >
+                {wishlisted ? '♥' : '♡'}
               </button>
             </div>
           )}
