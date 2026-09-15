@@ -195,19 +195,64 @@ class ResilientEmbeddingModel:
         return results[0] if is_single else np.array(results)
 
 
+class FastEmbedAdapter:
+    """Adapter to give fastembed the same .encode() interface as SentenceTransformer."""
+    def __init__(self, model):
+        self.model = model
+
+    def encode(self, texts):
+        is_single = isinstance(texts, str)
+        items = [texts] if is_single else list(texts)
+        embeddings = list(self.model.embed(items))
+        if is_single:
+            return np.array(embeddings[0], dtype=np.float32)
+        return np.array(embeddings, dtype=np.float32)
+
+
 def get_embedding_model():
-    """Lazy-load the SentenceTransformer model on first use with semantic fallback."""
+    """Lazy-load embedding model: fastembed (ONNX) -> sentence-transformers -> resilient fallback."""
     global _model
     if _model is None:
         try:
-            from sentence_transformers import SentenceTransformer
-            logger.info(f"Loading embedding model: {settings.EMBEDDING_MODEL}")
-            _model = SentenceTransformer(settings.EMBEDDING_MODEL)
-            logger.info("Embedding model loaded successfully")
+            from fastembed import TextEmbedding
+            logger.info("Loading FastEmbed model: sentence-transformers/all-MiniLM-L6-v2")
+            raw_model = TextEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
+            _model = FastEmbedAdapter(raw_model)
+            logger.info("FastEmbed model loaded successfully")
         except Exception as e:
-            logger.info(f"Using high-fidelity semantic feature vectorizer ({e}).")
-            _model = ResilientEmbeddingModel(dim=settings.EMBEDDING_DIMENSIONS)
+            try:
+                from sentence_transformers import SentenceTransformer
+                logger.info(f"Loading embedding model: {settings.EMBEDDING_MODEL}")
+                _model = SentenceTransformer(settings.EMBEDDING_MODEL)
+                logger.info("Embedding model loaded successfully")
+            except Exception as e2:
+                logger.info(f"Using high-fidelity semantic feature vectorizer ({e} / {e2}).")
+                _model = ResilientEmbeddingModel(dim=settings.EMBEDDING_DIMENSIONS)
     return _model
+
+
+STOP_WORDS = {
+    "a", "about", "above", "after", "again", "against", "all", "am", "an", "and",
+    "any", "are", "as", "at", "be", "because", "been", "before", "being", "below",
+    "between", "both", "but", "by", "can", "could", "did", "do", "does", "doing",
+    "down", "during", "each", "few", "for", "from", "further", "had", "has", "have",
+    "having", "he", "her", "here", "hers", "herself", "him", "himself", "his", "how",
+    "i", "if", "in", "into", "is", "it", "its", "itself", "just", "me", "more", "most",
+    "my", "myself", "no", "nor", "not", "of", "off", "on", "once", "only", "or",
+    "other", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "should",
+    "so", "some", "such", "than", "that", "the", "their", "theirs", "them", "themselves",
+    "then", "there", "these", "they", "this", "those", "through", "to", "too", "under",
+    "until", "up", "very", "was", "we", "were", "what", "when", "where", "which",
+    "while", "who", "whom", "why", "with", "would", "you", "your", "yours",
+    "want", "need", "show", "find", "looking", "give", "best", "good"
+}
+
+
+def clean_query_text(query: str) -> str:
+    """Strip punctuation and common stopwords for better FTS ranking."""
+    tokens = re.sub(r"[^\w\s-]", " ", query).split()
+    meaningful = [t for t in tokens if t.lower() not in STOP_WORDS and len(t) > 1]
+    return " ".join(meaningful) if meaningful else query
 
 
 def build_embedding_text(product: Product) -> str:
@@ -216,14 +261,16 @@ def build_embedding_text(product: Product) -> str:
         f"Product: {product.title}",
     ]
 
-    if hasattr(product, "category") and product.category:
-        parts.append(f"Category: {product.category.name}")
+    # Safely check category without triggering synchronous lazy-load
+    cat = product.__dict__.get("category")
+    if cat and hasattr(cat, "name") and cat.name:
+        parts.append(f"Category: {cat.name}")
 
     if product.brand:
         parts.append(f"Brand: {product.brand}")
 
     parts.append(f"Description: {product.description}")
-    parts.append(f"Price: ${product.price}")
+    parts.append(f"Price: ₹{product.price}")
 
     if product.attributes:
         attrs = ", ".join(f"{k}: {v}" for k, v in product.attributes.items())
@@ -345,8 +392,12 @@ class VectorService:
         max_price: float | None = None,
         category_id: uuid.UUID | None = None,
         category: str | None = None,
+        min_score: float = 0.30,
     ) -> list[tuple[Product, float]]:
-        """Hybrid search combining vector similarity, full-text ranking, and popularity."""
+        """
+        Hybrid search combining neural vector similarity, full-text ranking, and popularity
+        with minimum relevance cutoff to prevent noise bleed.
+        """
         cat_ids = await self._resolve_category_ids(category_id=category_id, category=category)
         if cat_ids is not None and len(cat_ids) == 0:
             return []
@@ -354,6 +405,7 @@ class VectorService:
         model = get_embedding_model()
         query_vector = model.encode(query).tolist()
         vector_str = f"[{','.join(str(v) for v in query_vector)}]"
+        fts_text = clean_query_text(query)
 
         sql = text("""
             WITH vector_results AS (
@@ -373,25 +425,36 @@ class VectorService:
                 SELECT
                     p.id,
                     ts_rank_cd(
-                        to_tsvector('english', p.title || ' ' || p.description),
-                        plainto_tsquery('english', :query_text)
+                        to_tsvector('english', p.title || ' ' || COALESCE(p.brand, '') || ' ' || p.description),
+                        plainto_tsquery('english', :fts_text)
                     ) AS fts_score
                 FROM products p
                 WHERE p.is_published = TRUE
                     AND (CAST(:cat_ids AS uuid[]) IS NULL OR p.category_id = ANY(CAST(:cat_ids AS uuid[])))
-                    AND to_tsvector('english', p.title || ' ' || p.description)
-                        @@ plainto_tsquery('english', :query_text)
+                    AND to_tsvector('english', p.title || ' ' || COALESCE(p.brand, '') || ' ' || p.description)
+                        @@ plainto_tsquery('english', :fts_text)
+            ),
+            combined AS (
+                SELECT
+                    p.id,
+                    COALESCE(vr.vector_score, 0) AS v_score,
+                    COALESCE(fr.fts_score, 0) AS f_score,
+                    (
+                        COALESCE(vr.vector_score, 0) * 0.65 +
+                        COALESCE(fr.fts_score, 0) * 0.20 +
+                        (p.avg_rating * LN(p.review_count + 1) / 10.0) * 0.15
+                    ) AS hybrid_score
+                FROM products p
+                LEFT JOIN vector_results vr ON vr.id = p.id
+                LEFT JOIN fts_results fr ON fr.id = p.id
+                WHERE (vr.id IS NOT NULL OR fr.id IS NOT NULL)
             )
             SELECT
-                p.id,
-                COALESCE(vr.vector_score, 0) * 0.65 +
-                COALESCE(fr.fts_score, 0) * 0.20 +
-                (p.avg_rating * LN(p.review_count + 1) / 10.0) * 0.15
-                    AS hybrid_score
-            FROM products p
-            LEFT JOIN vector_results vr ON vr.id = p.id
-            LEFT JOIN fts_results fr ON fr.id = p.id
-            WHERE (vr.id IS NOT NULL OR fr.id IS NOT NULL)
+                id,
+                hybrid_score
+            FROM combined
+            WHERE (v_score >= 0.32 OR f_score > 0.005)
+                AND hybrid_score >= :min_score
             ORDER BY hybrid_score DESC
             LIMIT :result_limit
         """)
@@ -400,10 +463,11 @@ class VectorService:
             sql,
             {
                 "query_vec": vector_str,
-                "query_text": query,
+                "fts_text": fts_text,
                 "min_price": min_price,
                 "max_price": max_price,
                 "cat_ids": cat_ids,
+                "min_score": min_score,
                 "result_limit": limit,
             },
         )
@@ -517,14 +581,17 @@ class VectorService:
     async def get_personalized_recommendations(
         self,
         interacted_ids: list[uuid.UUID],
+        search_queries: list[str] | None = None,
         limit: int = 4,
     ) -> dict:
         """
         Generate dynamic homepage recommendations based on user interactions
-        (products visited, added to cart, or purchased).
+        (products visited, added to cart, or purchased) and search queries.
         """
-        # If no interaction history, return top curated bestsellers
-        if not interacted_ids:
+        search_queries = [q.strip() for q in (search_queries or []) if q and q.strip()]
+
+        # If no interaction history and no search queries, return top curated bestsellers
+        if not interacted_ids and not search_queries:
             bestsellers_res = await self.db.execute(
                 select(Product)
                 .options(selectinload(Product.images))
@@ -540,38 +607,26 @@ class VectorService:
             }
 
         # Load interacted products and their embeddings
-        int_res = await self.db.execute(
-            select(Product)
-            .options(
-                selectinload(Product.category),
-                selectinload(Product.embedding),
-            )
-            .where(Product.id.in_(interacted_ids))
-        )
-        interacted_products = list(int_res.scalars().all())
-
-        if not interacted_products:
-            # Fallback
-            bestsellers_res = await self.db.execute(
+        interacted_products = []
+        if interacted_ids:
+            int_res = await self.db.execute(
                 select(Product)
-                .options(selectinload(Product.images))
-                .where(Product.is_published == True)
-                .order_by(Product.avg_rating.desc())
-                .limit(limit)
+                .options(
+                    selectinload(Product.category),
+                    selectinload(Product.embedding),
+                )
+                .where(Product.id.in_(interacted_ids))
             )
-            return {
-                "recommendations": [(p, 1.0) for p in bestsellers_res.scalars().all()],
-                "reason": "Trending & Curated Bestsellers",
-                "is_personalized": False,
-            }
+            interacted_products = list(int_res.scalars().all())
 
-        # Calculate user profile vector and dominant categories
+        model = get_embedding_model()
         user_vector = np.zeros(settings.EMBEDDING_DIMENSIONS, dtype=np.float32)
         valid_vectors = 0
         cat_ids = []
         parent_cat_ids = []
         dominant_cat_name = ""
 
+        # 1. Product interaction vectors (weight: 1.0)
         for p in interacted_products:
             if p.category_id:
                 cat_ids.append(p.category_id)
@@ -584,14 +639,23 @@ class VectorService:
                 user_vector += np.array(p.embedding.embedding, dtype=np.float32)
                 valid_vectors += 1
 
+        # 2. Search query vectors (weight: 1.5 - recent searches show strong immediate intent)
+        for q in search_queries[:3]:
+            try:
+                cleaned_q = clean_query_text(q)
+                q_vec = model.encode(cleaned_q)
+                user_vector += np.array(q_vec, dtype=np.float32) * 1.5
+                valid_vectors += 1
+            except Exception as e:
+                logger.warning(f"Failed to embed search query '{q}': {e}")
+
         if valid_vectors > 0:
             norm = np.linalg.norm(user_vector)
             if norm > 1e-6:
                 user_vector = user_vector / norm
         else:
-            # Generate fallback vector
-            model = get_embedding_model()
-            user_vector = model.encode(dominant_cat_name or "electronics")
+            fallback_text = search_queries[0] if search_queries else (dominant_cat_name or "electronics")
+            user_vector = model.encode(fallback_text)
 
         vector_str = f"[{','.join(str(v) for v in user_vector.tolist())}]"
 
@@ -604,14 +668,16 @@ class VectorService:
             all_affinity_cat_ids.extend(list(sibs.scalars().all()))
         all_affinity_cat_ids = list(set(all_affinity_cat_ids))
 
-        sql = text("""
+        has_cat_affinity = len(all_affinity_cat_ids) > 0
+
+        sql = text(f"""
             SELECT
                 p.id,
                 (
-                    (1 - (pe.embedding <=> :user_vec ::vector)) * 0.60 +
+                    (1 - (pe.embedding <=> :user_vec ::vector)) * 0.70 +
                     (CASE 
-                        WHEN p.category_id = ANY(:cat_ids) THEN 0.30
-                        WHEN p.category_id = ANY(:all_affinity_ids) THEN 0.15
+                        WHEN p.category_id = ANY(:cat_ids) THEN 0.20
+                        WHEN p.category_id = ANY(:all_affinity_ids) THEN 0.10
                         ELSE 0.00
                      END) +
                     (COALESCE(p.avg_rating, 0) / 50.0)
@@ -621,8 +687,8 @@ class VectorService:
             WHERE p.id != ALL(:interacted_ids)
                 AND p.is_published = TRUE
                 AND (
-                    p.category_id = ANY(:all_affinity_ids)
-                    OR (1 - (pe.embedding <=> :user_vec ::vector)) > 0.60
+                    {"p.category_id = ANY(:all_affinity_ids) OR " if has_cat_affinity else ""}
+                    (1 - (pe.embedding <=> :user_vec ::vector)) > 0.28
                 )
             ORDER BY final_score DESC
             LIMIT :result_limit
@@ -632,7 +698,7 @@ class VectorService:
             sql,
             {
                 "user_vec": vector_str,
-                "interacted_ids": interacted_ids,
+                "interacted_ids": interacted_ids or [uuid.UUID(int=0)],
                 "cat_ids": cat_ids or [uuid.UUID(int=0)],
                 "all_affinity_ids": all_affinity_cat_ids or [uuid.UUID(int=0)],
                 "result_limit": limit,
@@ -658,14 +724,22 @@ class VectorService:
             fill_res = await self.db.execute(
                 select(Product)
                 .options(selectinload(Product.images))
-                .where(Product.id.notin_(existing_ids), Product.is_published == True)
+                .where(Product.id.notin_(existing_ids or [uuid.UUID(int=0)]), Product.is_published == True)
                 .order_by(Product.avg_rating.desc())
                 .limit(limit - len(products_with_scores))
             )
             for p in fill_res.scalars().all():
                 products_with_scores.append((p, 0.85))
 
-        reason = f"Based on your interest in {dominant_cat_name}" if dominant_cat_name else "Inspired by your recent activity"
+        # Dynamic reason description
+        if search_queries and interacted_products:
+            reason = f"Based on your search for '{search_queries[0]}' & recent activity"
+        elif search_queries:
+            reason = f"Based on your search for '{search_queries[0]}'"
+        elif dominant_cat_name:
+            reason = f"Based on your interest in {dominant_cat_name}"
+        else:
+            reason = "Inspired by your recent activity"
 
         return {
             "recommendations": products_with_scores,

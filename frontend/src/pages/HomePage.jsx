@@ -1,41 +1,86 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import ProductCard from '../components/products/ProductCard';
-import { getInteractionPayload } from '../services/activityTracker';
+import {
+  getInteractionPayload,
+  getRecentSearchesPayload,
+  getRecentlyViewedIds,
+  clearRecentlyViewed,
+} from '../services/activityTracker';
 
 export default function HomePage() {
   const [recommended, setRecommended] = useState([]);
   const [recReason, setRecReason] = useState('');
   const [isPersonalized, setIsPersonalized] = useState(false);
   const [newArrivals, setNewArrivals] = useState([]);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const interactionIds = getInteractionPayload();
-        const [recRes, newRes] = await Promise.all([
-          api.get('/ai/personalized-recommendations', {
-            params: {
-              product_ids: interactionIds.length > 0 ? interactionIds.join(',') : undefined,
-              limit: 4,
-            },
-          }),
-          api.get('/products', { params: { limit: 4, sort_by: 'created_at' } }),
-        ]);
-        setRecommended(recRes.data.items || []);
-        setRecReason(recRes.data.reason || '');
-        setIsPersonalized(recRes.data.is_personalized || false);
-        setNewArrivals(newRes.data.items || []);
-      } catch (err) {
-        console.error('Failed to load homepage data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+  const fetchPersonalizedData = useCallback(async () => {
+    try {
+      const interactionIds = getInteractionPayload();
+      const searchQueries = getRecentSearchesPayload();
+      const recRes = await api.get('/ai/personalized-recommendations', {
+        params: {
+          product_ids: interactionIds.length > 0 ? interactionIds.join(',') : undefined,
+          search_queries: searchQueries.length > 0 ? searchQueries.join(',') : undefined,
+          limit: 4,
+        },
+      });
+      setRecommended(recRes.data.items || []);
+      setRecReason(recRes.data.reason || '');
+      setIsPersonalized(recRes.data.is_personalized || false);
+    } catch (err) {
+      console.error('Failed to load personalized recommendations:', err);
+    }
   }, []);
+
+  const fetchRecentlyViewed = useCallback(async () => {
+    const recentIds = getRecentlyViewedIds();
+    if (!recentIds || recentIds.length === 0) {
+      setRecentlyViewed([]);
+      return;
+    }
+    try {
+      const productPromises = recentIds.slice(0, 6).map((id) =>
+        api.get(`/products/${id}`).then((r) => r.data).catch(() => null)
+      );
+      const results = await Promise.all(productPromises);
+      setRecentlyViewed(results.filter(Boolean));
+    } catch (err) {
+      console.error('Failed to load recently viewed products:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchInitial = async () => {
+      setLoading(true);
+      await Promise.all([
+        fetchPersonalizedData(),
+        fetchRecentlyViewed(),
+        api.get('/products', { params: { limit: 4, sort_by: 'created_at' } })
+          .then((res) => setNewArrivals(res.data.items || []))
+          .catch(() => {}),
+      ]);
+      setLoading(false);
+    };
+
+    fetchInitial();
+
+    const handleActivityChange = () => {
+      fetchPersonalizedData();
+      fetchRecentlyViewed();
+    };
+
+    window.addEventListener('novamart_activity_updated', handleActivityChange);
+    return () => window.removeEventListener('novamart_activity_updated', handleActivityChange);
+  }, [fetchPersonalizedData, fetchRecentlyViewed]);
+
+  const handleClearRecentlyViewed = () => {
+    clearRecentlyViewed();
+    setRecentlyViewed([]);
+  };
 
   return (
     <div style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}>
@@ -175,7 +220,7 @@ export default function HomePage() {
           gap: 'var(--space-6)',
         }}>
           {[
-            { icon: '🚚', title: 'Complimentary Delivery', desc: 'On all orders over $150' },
+            { icon: '🚚', title: 'Complimentary Delivery', desc: 'On all orders over ₹1,500' },
             { icon: '✦', title: 'Curated Excellence', desc: '100% authentic designer heritage' },
             { icon: '🧠', title: 'AI Recommendation', desc: 'Intelligent semantic matching' },
             { icon: '🔒', title: 'Secure Checkout', desc: 'Encrypted & protected payments' },
@@ -257,6 +302,72 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ─── 3.5 RECENTLY VIEWED (DYNAMIC SESSION HISTORY) ─────────── */}
+      {recentlyViewed.length > 0 && (
+        <section style={{
+          padding: '0 var(--space-6) clamp(var(--space-10), 5vw, var(--space-14))',
+          maxWidth: 'var(--max-width)',
+          margin: '0 auto',
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            marginBottom: 'var(--space-6)',
+            flexWrap: 'wrap',
+            gap: 'var(--space-3)',
+            borderTop: '1px solid var(--border-default)',
+            paddingTop: 'var(--space-8)',
+          }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+                <h2 style={{
+                  fontSize: 'clamp(1.5rem, 2.5vw, 1.85rem)',
+                  fontFamily: 'var(--font-serif)',
+                  fontWeight: 500,
+                  color: 'var(--text-primary)',
+                  margin: 0,
+                }}>
+                  Recently Viewed
+                </h2>
+                <span className="badge badge-secondary" style={{ fontSize: '0.6875rem' }}>
+                  {recentlyViewed.length} item{recentlyViewed.length > 1 ? 's' : ''}
+                </span>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 'var(--space-1) 0 0' }}>
+                Items you recently explored in your browsing session.
+              </p>
+            </div>
+            <button
+              onClick={handleClearRecentlyViewed}
+              className="btn btn-ghost"
+              style={{
+                fontSize: '0.75rem',
+                color: 'var(--text-muted)',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                padding: 'var(--space-1) var(--space-3)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-sm)',
+              }}
+              title="Clear browsing history"
+            >
+              Clear History
+            </button>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+            gap: 'var(--space-5)',
+          }}>
+            {recentlyViewed.map((product) => (
+              <ProductCard key={`recent-${product.id}`} product={product} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ─── 4. CURATED DEPARTMENTS / CATEGORIES ──────────────────── */}
       <section style={{

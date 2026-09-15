@@ -99,6 +99,7 @@ class CartService:
             self.db.add(cart_item)
 
         await self.db.flush()
+        self.db.expire(cart)
         return await self.get_or_create_cart(user_id)
 
     async def update_item(
@@ -133,6 +134,7 @@ class CartService:
 
         item.quantity = quantity
         await self.db.flush()
+        self.db.expire(cart)
         return await self.get_or_create_cart(user_id)
 
     async def remove_item(self, user_id: uuid.UUID, item_id: uuid.UUID) -> Cart:
@@ -153,6 +155,7 @@ class CartService:
 
         await self.db.delete(item)
         await self.db.flush()
+        self.db.expire(cart)
         return await self.get_or_create_cart(user_id)
 
     async def clear_cart(self, user_id: uuid.UUID) -> None:
@@ -161,3 +164,4 @@ class CartService:
         for item in cart.items:
             await self.db.delete(item)
         await self.db.flush()
+        self.db.expire(cart)

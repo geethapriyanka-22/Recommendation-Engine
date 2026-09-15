@@ -94,17 +94,19 @@ async def get_recommendations(
 @router.get("/personalized-recommendations", response_model=PersonalizedRecommendationResponse)
 async def get_personalized_recommendations(
     product_ids: str | None = Query(None, description="Comma-separated product IDs from client activity (visited, cart, purchased)"),
+    search_queries: str | None = Query(None, description="Comma-separated recent search terms from client activity"),
     limit: int = Query(4, ge=1, le=20),
     current_user: User | None = Depends(get_current_user_optional),
     db: AsyncSession = Depends(get_async_session),
 ):
     """
     Generate dynamic homepage recommendations based on user interactions
-    (visited, added to cart, or purchased products).
+    (visited, added to cart, or purchased products, plus recent search queries).
     """
     interacted_uuids: list[UUID] = []
+    parsed_queries: list[str] = []
 
-    # 1. Parse client-passed interaction IDs
+    # 1. Parse client-passed interaction IDs and search queries
     if product_ids:
         for raw_id in product_ids.split(","):
             raw_clean = raw_id.strip()
@@ -113,6 +115,12 @@ async def get_personalized_recommendations(
                     interacted_uuids.append(UUID(raw_clean))
                 except ValueError:
                     pass
+
+    if search_queries:
+        for sq in search_queries.split(","):
+            sq_clean = sq.strip()
+            if sq_clean and sq_clean not in parsed_queries:
+                parsed_queries.append(sq_clean)
 
     # 2. If logged in, supplement with database order and cart history
     if current_user:
@@ -146,6 +154,7 @@ async def get_personalized_recommendations(
     service = VectorService(db)
     result = await service.get_personalized_recommendations(
         interacted_ids=interacted_uuids,
+        search_queries=parsed_queries,
         limit=limit,
     )
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import { formatPrice } from '../utils/currency';
 
 const PRESET_QUERIES = [
   'ergonomic workspace accessories for back pain',
@@ -215,7 +216,7 @@ export default function AiPlaygroundPage() {
 
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--space-3)' }}>
                         <strong style={{ fontSize: 'var(--text-lg)', color: 'var(--accent-primary)' }}>
-                          ${product.price?.toFixed(2)}
+                          {formatPrice(product.price)}
                         </strong>
                         <Link to={`/products/${product.slug || product.id}`} className="btn btn-secondary btn-sm">
                           View Details

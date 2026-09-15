@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import { formatPrice } from '../utils/currency';
+import { trackProductInteraction } from '../services/activityTracker';
 
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart();
@@ -45,6 +47,11 @@ export default function CheckoutPage() {
         shipping_address_id: null,
         notes: orderNotes
       });
+
+      const purchasedProductIds = (cart?.items || []).map(item => item.product_id || item.product?.id).filter(Boolean);
+      if (purchasedProductIds.length > 0) {
+        trackProductInteraction('purchase', purchasedProductIds);
+      }
 
       setOrderComplete(data);
       if (clearCart) clearCart();
@@ -103,7 +110,7 @@ export default function CheckoutPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border-default)', paddingTop: 'var(--space-3)' }}>
               <span style={{ fontWeight: 600 }}>Total Paid:</span>
               <strong style={{ fontSize: 'var(--text-lg)', color: 'var(--accent-primary)' }}>
-                ${orderComplete.total?.toFixed(2)}
+                {formatPrice(orderComplete.total)}
               </strong>
             </div>
           </div>
@@ -345,11 +352,11 @@ export default function CheckoutPage() {
                       {item.product?.title}
                     </div>
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                      Qty: {item.quantity} × ${item.product?.price?.toFixed(2)}
+                      Qty: {item.quantity} × {formatPrice(item.product?.price)}
                     </div>
                   </div>
                   <strong style={{ fontSize: 'var(--text-sm)' }}>
-                    ${(item.product?.price * item.quantity).toFixed(2)}
+                    {formatPrice(item.product?.price * item.quantity)}
                   </strong>
                 </div>
               ))}
@@ -358,20 +365,20 @@ export default function CheckoutPage() {
             <div style={{ borderTop: '1px solid var(--border-default)', paddingTop: 'var(--space-4)', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', fontSize: 'var(--text-sm)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
                 <span>Subtotal:</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatPrice(subtotal)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
                 <span>Est. Tax (8%):</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>{formatPrice(tax)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
                 <span>Shipping:</span>
-                <span>{shipping === 0 ? <strong style={{ color: 'var(--success)' }}>FREE</strong> : `$${shipping.toFixed(2)}`}</span>
+                <span>{shipping === 0 ? <strong style={{ color: 'var(--success)' }}>FREE</strong> : formatPrice(shipping)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border-default)', paddingTop: 'var(--space-3)', marginTop: 'var(--space-1)' }}>
                 <span style={{ fontWeight: 700, fontSize: 'var(--text-base)' }}>Total:</span>
                 <span style={{ fontWeight: 800, fontSize: 'var(--text-xl)', color: 'var(--accent-primary)' }}>
-                  ${total.toFixed(2)}
+                  {formatPrice(total)}
                 </span>
               </div>
             </div>
@@ -382,7 +389,7 @@ export default function CheckoutPage() {
               className="btn btn-primary"
               style={{ width: '100%', marginTop: 'var(--space-6)', padding: 'var(--space-4)', fontSize: 'var(--text-base)' }}
             >
-              {loading ? 'Processing Order...' : `Place Order • $${total.toFixed(2)}`}
+              {loading ? 'Processing Order...' : `Place Order • ${formatPrice(total)}`}
             </button>
 
             <div style={{ marginTop: 'var(--space-4)', textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-1)' }}>
